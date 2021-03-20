@@ -13,7 +13,7 @@
 
 
 function [F_A_x,F_B_x,F_C_x,F_D_x_2,F_D_x_5,F_E_x_3,F_E_x_4,F_F_x,F_G_x,F_H_x,F_A_y,F_B_y,F_C_y,F_D_y_2,F_D_y_5,F_E_y_3,F_E_y_4,F_F_y,F_G_y,F_H_y,M_A] = ...
-dynamics_4bar(phi2,phi3,phi4,phi5,phi6,phi7,phi8,dphi2,dphi3,dphi4,dphi5,dphi6,dphi7,dphi8,ddphi2,ddphi3,ddphi4,ddphi5,ddphi6,ddphi7,ddphi8,r2,r3,r4,r5,r6,r7,r8,r9,r10, m2,m3,m4,m5,m6,m7,m8,X2,X3,X4,X5,X6,X7,X8,Y2,Y3,Y4,Y5,Y6,Y7,Y8,J2,J3,J4,J5,J6,J7,J8,t,fig_dyn_4bar)
+dynamics_4bar(phi2,phi3,phi4,phi5,phi6,phi7,phi8,dphi2,dphi3,dphi4,dphi5,dphi6,dphi7,dphi8,ddphi2,ddphi3,ddphi4,ddphi5,ddphi6,ddphi7,ddphi8,r2,r3,r4,r5,r6,r7,r8,r9,r10, m2,m3,m4,m5,m6,m7,m8,X2,X3,X4,X5,X6,X7,X8,Y2,Y3,Y4,Y5,Y6,Y7,Y8,J2,J3,J4,J5,J6,J7,J8,Jcog2,Jcog3,Jcog4,Jcog5,Jcog6,Jcog7,Jcog8,t,fig_dyn_4bar)
 
 
 % a lot of definitions to make the matrix A and B a bit clear.
@@ -340,7 +340,7 @@ M_controle = zeros(t_size);
 dEdt = zeros(t_size);
 for k=1:t_size
 
-    dEdt(k) = J2*dphi2(k)*ddphi2(k) + J3*dphi3(k)*ddphi3(k) + J4*dphi4(k)*ddphi4(k) + J5*dphi5(k)*ddphi5(k) + J6*dphi6(k)*ddphi6(k) + J7*dphi7(k)*ddphi7(k) + J8*dphi8(k)*ddphi8(k);
+    dEdt(k) = Jcog2*dphi2(k)*ddphi2(k) + Jcog3*dphi3(k)*ddphi3(k) + Jcog4*dphi4(k)*ddphi4(k) + Jcog5*dphi5(k)*ddphi5(k) + Jcog6*dphi6(k)*ddphi6(k) + Jcog7*dphi7(k)*ddphi7(k) + Jcog8*dphi8(k)*ddphi8(k);
     M_controle(k) = dEdt(k)/dphi2(k);
 end
 

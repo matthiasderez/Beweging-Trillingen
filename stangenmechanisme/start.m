@@ -53,23 +53,53 @@ Y6 = 0;
 Y7 = 0;
 Y8 = 0;
 
-m2 = r2*3.12; %staal met doorsnede 4cm² --> 3.12kg/m
+
+%%% HOE HET WAS%%%
+
+% m2 = r2*3.12; %staal met doorsnede 4cm² --> 3.12kg/m
+% m3 = r3*3.12;
+% m4 = r4*3.12;
+% m5 = r5*3.12;
+% m6 = r6*3.12;
+% m7 = r7*3.12;
+% m8 = r8*3.12;
+
+% J2 = m2*r2^2/12;
+% J3 = m3*r3^2/12;
+% J4 = m4*r4^2/12;
+% J5 = m5*r5^2/12;
+% J6 = m6*r6^2/12;
+% J7 = m7*r7^2/12;
+% J8 = m8*r8^2/12;
+
+
+%%% NIEUW %%%
+
+m2 = (r2+r9)*3.12; %staal met doorsnede 4cm² --> 3.12kg/m
 m3 = r3*3.12;
 m4 = r4*3.12;
 m5 = r5*3.12;
 m6 = r6*3.12;
-m7 = r7*3.12;
+m7 = (r7+r10)*3.12;
 m8 = r8*3.12;
 
+J2 = m2*(r2+r9)^2/12 + m2*( X2^2 + Y2^2);
+J3 = m3*r3^2/12 + m3*( X3^2 + Y3^2);
+J4 = m4*r4^2/12+ m4*( X4^2 + Y4^2);
+J5 = m5*r5^2/12+ m5*( X5^2 + Y5^2);
+J6 = m6*r6^2/12+ m6*( X6^2 + Y6^2);
+J7 = m7*(r7+r10)^2/12+ m7*( X7^2 + Y7^2);
+J8 = m8*r8^2/12+ m8*( X8^2 + Y8^2);
 
-J2 = m2*r2^2/12;
-J3 = m3*r3^2/12;
-J4 = m4*r4^2/12;
-J5 = m5*r5^2/12;
-J6 = m6*r6^2/12;
-J7 = m7*r7^2/12;
-J8 = m8*r8^2/12;
+%%% NIEUW %%%
 
+Jcog2 = m2*(r2+r9)^2/12;
+Jcog3 = m3*r3^2/12;
+Jcog4 = m4*r4^2/12;
+Jcog5 = m5*r5^2/12;
+Jcog6 = m6*r6^2/12;
+Jcog7 = m7*(r7+r10)^2/12;
+Jcog8 = m8*r8^2/12;
 
 
 
@@ -110,7 +140,7 @@ phi8_init = pi/2-epsilon;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % calculation of the dynamics (see dyn_4bar.m)
-[F_A_x,F_B_x,F_C_x,F_D_x_2,F_D_x_5,F_E_x_3,F_E_x_4,F_F_x,F_G_x,F_H_x,F_A_y,F_B_y,F_C_y,F_D_y_2,F_D_y_5,F_E_y_3,F_E_y_4,F_F_y,F_G_y,F_H_y,M_A] = dynamics_4bar(phi2,phi3,phi4,phi5,phi6,phi7,phi8,dphi2,dphi3,dphi4,dphi5,dphi6,dphi7,dphi8,ddphi2,ddphi3,ddphi4,ddphi5,ddphi6,ddphi7,ddphi8,r2,r3,r4,r5,r6,r7,r8,r9,r10,m2,m3,m4,m5,m6,m7,m8,X2,X3,X4,X5,X6,X7,X8,Y2,Y3,Y4,Y5,Y6,Y7,Y8,J2,J3,J4,J5,J6,J7,J8,t,fig_dyn_4bar);
+[F_A_x,F_B_x,F_C_x,F_D_x_2,F_D_x_5,F_E_x_3,F_E_x_4,F_F_x,F_G_x,F_H_x,F_A_y,F_B_y,F_C_y,F_D_y_2,F_D_y_5,F_E_y_3,F_E_y_4,F_F_y,F_G_y,F_H_y,M_A] = dynamics_4bar(phi2,phi3,phi4,phi5,phi6,phi7,phi8,dphi2,dphi3,dphi4,dphi5,dphi6,dphi7,dphi8,ddphi2,ddphi3,ddphi4,ddphi5,ddphi6,ddphi7,ddphi8,r2,r3,r4,r5,r6,r7,r8,r9,r10,m2,m3,m4,m5,m6,m7,m8,X2,X3,X4,X5,X6,X7,X8,Y2,Y3,Y4,Y5,Y6,Y7,Y8,J2,J3,J4,J5,J6,J7,J8,Jcog2,Jcog3,Jcog4,Jcog5,Jcog6,Jcog7,Jcog8,t,fig_dyn_4bar);
   
 
 
