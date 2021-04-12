@@ -96,7 +96,7 @@ acc_2 =       cross(omega2,cross(omega2,A_cog2_vec))+cross(alpha2,A_cog2_vec);
 acc_D =       cross(omega2,cross(omega2,AD_vec    ))+cross(alpha2,AD_vec    );
 acc_C =       cross(omega2,cross(omega2,AC_vec    ))+cross(alpha2,AC_vec    );
 acc_3 = acc_C+cross(omega3,cross(omega3,C_cog3_vec))+cross(alpha3,C_cog3_vec);
-acc_E = acc_C+cross(omega3,cross(omega3,CE_vec))+cross(alpha3,CE_vec);
+acc_E = acc_C+cross(omega3,cross(omega3,CE_vec    ))+cross(alpha3,CE_vec);
 acc_4 =       cross(omega4,cross(omega4,B_cog4_vec))+cross(alpha4,B_cog4_vec);
 
 
@@ -123,7 +123,37 @@ acc_7y = acc_7(:,2);
 acc_8x = acc_8(:,1);
 acc_8y = acc_8(:,2);
 
-% Tot hier normaal klaar, nu bezig met krachtenvergelijkingen
+%Velocity vectors
+vel_2 = cross(omega2, A_cog2_vec);
+vel_C = cross(omega2,AC_vec);
+vel_D = cross(omega2, AD_vec);
+vel_4 = cross(omega4, B_cog4_vec);
+vel_3 = vel_C + cross(omega3, C_cog3_vec);
+vel_6 = vel_D + cross(omega6, D_cog6_vec);
+vel_F = vel_D + cross(omega6, DF_vec);
+vel_H = vel_F + cross(omega7, FH_vec);
+vel_7 = vel_H + cross(omega7, H_cog7_vec);
+vel_8 = vel_H + cross(omega8, H_cog8_vec);
+vel_G = vel_H + cross(omega8, HG_vec);
+vel_5 = vel_G + cross(omega5, G_cog5_vec);
+
+vel_2x = vel_2(:,1);
+vel_2y = vel_2(:,2);
+vel_3x = vel_3(:,1);
+vel_3y = vel_3(:,2);
+vel_4x = vel_4(:,1);
+vel_4y = vel_4(:,2);
+vel_5x = vel_5(:,1);
+vel_5y = vel_5(:,2);
+vel_6x = vel_6(:,1);
+vel_6y = vel_6(:,2);
+vel_7x = vel_7(:,1);
+vel_7y = vel_7(:,2);
+vel_8x = vel_8(:,1);
+vel_8y = vel_8(:,2);
+
+
+
 
 
 % **********************
@@ -196,25 +226,25 @@ Am = [1, 0,	0,	0,	1,	0,	1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0;
     
   Bm = [ m2*acc_2x(k);
         m2*acc_2y(k);
-        J2*ddphi2(k);
+        Jcog2*ddphi2(k);
         m3*acc_3x(k);
         m3*acc_3y(k);
-        J3*ddphi3(k);
+        Jcog3*ddphi3(k);
         m4*acc_4x(k);
         m4*acc_4y(k);
-        J4*ddphi4(k);
+        Jcog4*ddphi4(k);
         m5*acc_5x(k);
         m5*acc_5y(k);
-        J5*ddphi5(k);
+        Jcog5*ddphi5(k);
         m6*acc_6x(k);
         m6*acc_6y(k);
-        J6*ddphi6(k);
+        Jcog6*ddphi6(k);
         m7*acc_7x(k);
         m7*acc_7y(k);
-        J7*ddphi7(k);
+        Jcog7*ddphi7(k);
         m8*acc_8x(k);
         m8*acc_8y(k);
-        J8*ddphi8(k)];
+        Jcog8*ddphi8(k)];
     Am;
    [R, bj] = rref(Am);
     x = Am\Bm;
@@ -337,18 +367,27 @@ end
 % *************************
 
 M_controle = zeros(t_size);
+size(M_controle)
 dEdt = zeros(t_size);
 for k=1:t_size
 
-    dEdt(k) = Jcog2*dphi2(k)*ddphi2(k) + Jcog3*dphi3(k)*ddphi3(k) + Jcog4*dphi4(k)*ddphi4(k) + Jcog5*dphi5(k)*ddphi5(k) + Jcog6*dphi6(k)*ddphi6(k) + Jcog7*dphi7(k)*ddphi7(k) + Jcog8*dphi8(k)*ddphi8(k);
+    dEdt(k) = Jcog2*dphi2(k)*ddphi2(k) + Jcog3*dphi3(k)*ddphi3(k) + Jcog4*dphi4(k)*ddphi4(k) + ...
+        Jcog5*dphi5(k)*ddphi5(k) + Jcog6*dphi6(k)*ddphi6(k) + Jcog7*dphi7(k)*ddphi7(k) + Jcog8*dphi8(k)*ddphi8(k)+ ...
+        m2*(vel_2x(k)*acc_2x(k)+vel_2y(k)*acc_2y(k))+m3*(vel_3x(k)*acc_3x(k)+vel_3y(k)*acc_3y(k))+m4*(vel_4x(k)*acc_4x(k)+vel_4y(k)*acc_4y(k))+m5*(vel_5x(k)*acc_5x(k)+vel_5y(k)*acc_5y(k))+...
+        m6*(vel_6x(k)*acc_6x(k)+vel_6y(k)*acc_6y(k))+m7*(vel_7x(k)*acc_7x(k)+vel_7y(k)*acc_7y(k))+m8*(vel_8x(k)*acc_8x(k)+vel_8y(k)*acc_8y(k));
     M_controle(k) = dEdt(k)/dphi2(k);
 end
 
 figure
-plot(t,M_controle)
+plot(t,M_controle(:,1))
 ylabel('M_controle [N-m]')
 xlabel('t [s]')
-    
+
+figure
+plot(t, M_A - M_controle(:,1))
+ylabel('M_A - M_controle')
+xlabel('t [s]')
+
 
 
 

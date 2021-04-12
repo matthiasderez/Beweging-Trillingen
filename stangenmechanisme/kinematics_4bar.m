@@ -74,20 +74,20 @@ for k=1:t_size
     
     % *** velocity analysis ***
     
-    Bm = [-r3*sin(phi3(k)),  r4*sin(phi4(k)),0,0,0,0;
+    Am = [-r3*sin(phi3(k)),  r4*sin(phi4(k)),0,0,0,0;
          r3*cos(phi3(k)), -r4*cos(phi4(k)),0,0,0,0;
          0,0,-r5*sin(phi5(k)), -r6*sin(phi6(k)), r7*sin(phi7(k)),-r8*sin(phi8(k));
          0,0,r5*cos(phi5(k)), r6*cos(phi6(k)), -r7*cos(phi7(k)),r8*cos(phi8(k));
          -r3*sin(phi3(k)),0,0, r6*sin(phi6(k)), r10*sin(phi7(k)),0;
          r3*cos(phi3(k)),0,0, -r6*cos(phi6(k)), -r10*cos(phi7(k)),0];
-    Am = [ r2*sin(phi2(k))*dphi2(k);
+    Bm = [ r2*sin(phi2(k))*dphi2(k);
          -r2*cos(phi2(k))*dphi2(k);
          0;
          0;
          -r9*sin(phi2(k))*dphi2(k);
          r9*cos(phi2(k))*dphi2(k)];
      
-    x = Bm\Am;
+    x = Am\Bm;
     
     % save results
     dphi3(k) = x(1);
@@ -101,20 +101,20 @@ for k=1:t_size
     
     % *** acceleration analysis ***
     
-   Bm = [-r3*sin(phi3(k)),  r4*sin(phi4(k)),0,0,0,0;
+   Am = [-r3*sin(phi3(k)),  r4*sin(phi4(k)),0,0,0,0;
          r3*cos(phi3(k)), -r4*cos(phi4(k)),0,0,0,0;
          0,0,-r5*sin(phi5(k)), -r6*sin(phi6(k)), r7*sin(phi7(k)),-r8*sin(phi8(k));
          0,0,r5*cos(phi5(k)), r6*cos(phi6(k)), -r7*cos(phi7(k)),r8*cos(phi8(k));
          -r3*sin(phi3(k)),0,0, r6*sin(phi6(k)), r10*sin(phi7(k)),0;
          r3*cos(phi3(k)),0,0, -r6*cos(phi6(k)), -r10*cos(phi7(k)),0];
-    Am = [r2*cos(phi2(k))*dphi2(k)^2+r2*sin(phi2(k))*ddphi2(k)+r3*cos(phi3(k))*dphi3(k)^2-r4*cos(phi4(k))*dphi4(k)^2;
+    Bm = [r2*cos(phi2(k))*dphi2(k)^2+r2*sin(phi2(k))*ddphi2(k)+r3*cos(phi3(k))*dphi3(k)^2-r4*cos(phi4(k))*dphi4(k)^2;
          r2*sin(phi2(k))*dphi2(k)^2-r2*cos(phi2(k))*ddphi2(k)+r3*sin(phi3(k))*dphi3(k)^2-r4*sin(phi4(k))*dphi4(k)^2;
-         0;
-         0;
+         r5*cos(phi5(k))*dphi5(k)^2+r6*cos(phi6(k))*dphi6(k)^2-r7*cos(phi7(k))*dphi7(k)^2+r8*cos(phi8(k))*dphi8(k)^2;
+         r5*sin(phi5(k))*dphi5(k)^2+r6*sin(phi6(k))*dphi6(k)^2-r7*sin(phi7(k))*dphi7(k)^2+r5*8*sin(phi8(k))*dphi8(k)^2;
          -r9*cos(phi2(k))*dphi2(k)^2-r9*sin(phi2(k))*ddphi2(k)+r3*cos(phi3(k))*dphi3(k)^2-r6*cos(phi6(k))*dphi6(k)^2-r10*cos(phi7(k))*dphi7(k)^2;
          -r9*sin(phi2(k))*dphi2(k)^2+r9*cos(phi2(k))*ddphi2(k)+r3*sin(phi3(k))*dphi3(k)^2-r6*sin(phi6(k))*dphi6(k)^2-r10*sin(phi7(k))*dphi7(k)^2];
     
-    x = Bm\Am;
+    x = Am\Bm;
     % save results
     ddphi3(k) = x(1);
     ddphi4(k) = x(2);
@@ -302,5 +302,101 @@ if fig_kin_4bar
     xlabel('t [s]')
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% CONTROLE KINEMATICA %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%Controle positie voor phi3 en phi4
+z = zeros(length(phi2));
+alfa_c = zeros(length(phi2));
+beta_c = zeros(length(phi2));
+phi3_c = zeros(length(phi2));
+phi4_c = zeros(length(phi2));
+
+for i = 1:length(phi2)
+    z(i) = sqrt(r1^2+r2^2-2*r1*r2*cos(phi2(i)-3*pi/2));
+    alfa_c(i) = acos((r3^2-r4^2-z(i)^2)/(-2*r4*z(i)));
+    beta_c(i) = acos((r2^2-r1^2-z(i)^2)/(-2*r1*z(i)));
+    phi3_c(i) = -beta_c(i) -pi/2 +acos((r4^2-z(i)^2-r3^2)/(-2*r3*z(i)));
+    phi4_c(i) = pi/2-alfa_c(i) - beta_c(i);
+end
+figure
+plot(t, phi3-phi3_c(:,1))
+xlabel('tijd')
+ylabel('phi3-phi3_c')
+    
+figure
+plot(t, phi4-phi4_c(:,1))
+xlabel('tijd')
+ylabel('phi4-phi4_c')
+
+%VELOCITY
+omega3_c = zeros(length(phi2),1);
+omega4_c = zeros(length(phi2),1);
+for i = 1: length(phi2)
+    Ac = [-r3*sin(phi3(i)), r4*sin(phi4(i));
+            r3*cos(phi3(i)), -r4 *cos(phi4(i))];
+            
+    Bc = [r2*sin(phi2(i))*dphi2(i);
+            -r2*cos(phi2(i))*dphi2(i)];
+    x = Ac\Bc;
+    omega3_c(i) = x(1);
+    omega4_c(i) = x(2);
+end
+figure
+plot(t, dphi3-omega3_c)
+xlabel('tijd')
+ylabel('dphi3-omega3_c')
+
+figure
+plot(t, dphi4-omega4_c)
+xlabel('tijd')
+ylabel('dphi4-omega4_c')
+        
+%ACCELERATION
+alfa3_c = zeros(length(phi2),1);
+alfa4_c = zeros(length(phi2),1);
+omega2 = [zeros(size(phi2)) zeros(size(phi2)) dphi2];
+omega3_c = [zeros(size(phi2)) zeros(size(phi2)) omega3_c];
+omega4_c = [zeros(size(phi2)) zeros(size(phi2)) omega4_c];
+AC_vec = [r2*cos(phi2) r2*sin(phi2) zeros(size(phi2))];
+BE_vec = [r4*cos(phi4) r4*sin(phi4) zeros(size(phi2))];
+CE_vec = [r3*cos(phi3) r3*sin(phi3) zeros(size(phi2))];
+acc_2 =       cross(omega2,cross(omega2,AC_vec    ));
+acc_4 =       cross(omega4_c,cross(omega4_c,BE_vec    ));
+acc_3 =       cross(omega3_c,cross(omega3_c,CE_vec    )); 
+acc_2_x = acc_2(:,1);
+acc_2_y = acc_2(:,2);
+acc_4_x = acc_4(:,1);
+acc_4_y = acc_4(:,2);
+acc_3_x = acc_3(:,1);
+acc_3_y = acc_3(:,2);
+
+for i = 1:length(phi2)
+    Ac = [-r3*sin(phi3(i)), r4*sin(phi4(i));
+            r3*cos(phi3(i)), -r4*cos(phi4(i))];
+    Bc = [r2*sin(phi2(i))*ddphi2(i)+acc_4_x(i)-acc_2_x(i)-acc_3_x(i);
+        -r2*cos(phi2(i))*ddphi2(i)+acc_4_y(i) - acc_2_y(i) - acc_3_y(i)];
+    x = Ac\Bc;
+    alfa3_c(i) = x(1);
+    alfa4_c(i) = x(2);
+end
+figure
+plot(t, ddphi3-alfa3_c)
+xlabel('tijd')
+ylabel('ddphi3-alfa3_c')
+
+figure
+plot(t, ddphi4-alfa4_c)
+xlabel('tijd')
+ylabel('ddphi4-alfa4_c')
+        
+    
+
+
+        
+        
+    
 
 
