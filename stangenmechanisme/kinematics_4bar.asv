@@ -464,7 +464,7 @@ plot(t, vel_F1_x - vel_F2_x)
 xlabel('tijd [s]')
 ylabel('absolute error on x direction velocity F')
 subplot(212)
-plot(t, (vel_F1_x - vel_F2_x)./vel_F1_x)
+plot(t, (vel_F1_x - vel_F2_x)/vel_F1_x)
 xlabel('tijd [s]')
 ylabel('relative error on x direction velocity F')
 hold off
@@ -474,31 +474,25 @@ hold on
 subplot(211)
 plot(t, vel_F1_y)
 xlabel('tijd [s]')
-ylabel('y direction velocity F, path 1')
+ylabel('x direction velocity F, path 1')
 subplot(212)
-plot(t, vel_F2_y)
+plot(t, vel_F2_x)
 xlabel('tijd [s]')
-ylabel('y direction velocity F, path 2')
+ylabel('x direction velocity F, path 2')
 hold off
 figure
 hold on
 subplot(211)
-plot(t, vel_F1_y - vel_F2_y)
+plot(t, vel_F1_x - vel_F2_x)
 xlabel('tijd [s]')
-ylabel('absolute error on y direction velocity F')
+ylabel('absolute error on x direction velocity F')
 subplot(212)
-plot(t, (vel_F1_y - vel_F2_y)./vel_F1_y)
+plot(t, (vel_F1_x - vel_F2_x)/vel_F1_x)
 xlabel('tijd [s]')
-ylabel('relative error on y direction velocity F')
+ylabel('relative error on x direction velocity F')
 hold off
 
 %VERSNELLING
-
-alpha2 = [zeros(size(phi2)) zeros(size(phi2)) ddphi2];
-alpha3 = [zeros(size(phi2)) zeros(size(phi2)) ddphi3];
-alpha6 = [zeros(size(phi2)) zeros(size(phi2)) ddphi6];
-alpha7 = [zeros(size(phi2)) zeros(size(phi2)) ddphi7];
-
 acc_D =       cross(omega2,cross(omega2,AD_vec    ))+cross(alpha2,AD_vec    );
 acc_F1 = acc_D+cross(omega6,cross(omega6,DF_vec))+cross(alpha6,DF_vec);
 acc_C =       cross(omega2,cross(omega2,AC_vec    ))+cross(alpha2,AC_vec    );
@@ -511,54 +505,8 @@ acc_F1_y = acc_F1(:,2);
 acc_F2_x = acc_F2(:,1);
 acc_F2_y = acc_F2(:,2);
 
+    
 
-
-figure
-hold on
-subplot(211)
-plot(t, acc_F1_x)
-xlabel('tijd [s]')
-ylabel('x direction acceleration F, path 1')
-subplot(212)
-plot(t, acc_F2_x)
-xlabel('tijd [s]')
-ylabel('x direction acceleration F, path 2')
-hold off
-figure
-hold on
-subplot(211)
-plot(t, acc_F1_x - acc_F2_x)
-xlabel('tijd [s]')
-ylabel('absolute error on x direction acceleration F')
-subplot(212)
-plot(t, (acc_F1_x - acc_F2_x)./acc_F1_x)
-xlabel('tijd [s]')
-ylabel('relative error on x direction acceleration F')
-hold off
-
-
-figure
-hold on
-subplot(211)
-plot(t, acc_F1_y)
-xlabel('tijd [s]')
-ylabel('y direction acceleration F, path 1')
-subplot(212)
-plot(t, acc_F2_y)
-xlabel('tijd [s]')
-ylabel('y direction acceleration F, path 2')
-hold off
-figure
-hold on
-subplot(211)
-plot(t, acc_F1_y - acc_F2_y)
-xlabel('tijd [s]')
-ylabel('absolute error on y direction acceleration F')
-subplot(212)
-plot(t, (acc_F1_y - acc_F2_y)./acc_F1_y)
-xlabel('tijd [s]')
-ylabel('relative error on y direction acceleration F')
-hold off
 
         
         

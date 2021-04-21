@@ -379,18 +379,15 @@ for k=1:t_size
 end
 
 figure
-subplot(211)
+subplot(221)
 plot(t,M_controle(:,1))
 ylabel('M_{controle} [N-m]')
 xlabel('t [s]')
-subplot(212)
-plot(t,M_A)
-ylabel('M_A [N-m]')
-xlabel('t [s]')
+
 
 figure
 plot(t, M_A - M_controle(:,1))
-ylabel('M_A - M_{controle} [N-m]')
+ylabel('M_A - M_controle')
 xlabel('t [s]')
 
 
