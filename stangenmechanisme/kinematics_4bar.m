@@ -412,10 +412,13 @@ figure
 hold on 
 subplot(211)
 plot(AD_vec(:,1)+DF_vec(:,1),AD_vec(:,2)+DF_vec(:,2))
-xlabel('position F via route 1')
+xlabel('x position F via route 1')
+ylabel('y position F via route 1')
+
 subplot(212)
 plot(AC_vec(:,1)+CE_vec(:,1)+EF_vec(:,1),AC_vec(:,2)+CE_vec(:,2)+EF_vec(:,2))
-xlabel('position F via route 2')
+xlabel('x position F via route 2')
+ylabel('y position F via route 2')
 hold off
 
 figure

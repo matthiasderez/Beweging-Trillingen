@@ -152,7 +152,3 @@ figure
 load fourbar_movie Movie
 movie(Movie)
 
-
-%vragen volgende week:
-    % assembly gwn goed zo?
-    % phi8, dphi8 en ddphi 8 niet in de buurt van machineprecisie
