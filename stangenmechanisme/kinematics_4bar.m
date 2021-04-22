@@ -227,22 +227,22 @@ if fig_kin_4bar
     axis equal
     
     figure
-    subplot(711)
+    subplot(611)
     plot(t,phi2)
     ylabel('\phi_2 [rad]')
-    subplot(712)
+    subplot(612)
     plot(t,phi3)
     ylabel('\phi_3 [rad]')
-    subplot(713)
+    subplot(613)
     plot(t,phi4)
     ylabel('\phi_4 [rad]')
-    subplot(714)
+    subplot(614)
     plot(t,phi5)
     ylabel('\phi_5 [rad]')
-    subplot(715)
+    subplot(615)
     plot(t,phi6)
     ylabel('\phi_6 [rad]')
-    subplot(716)
+    subplot(616)
     plot(t,phi7)
     ylabel('\phi_7 [rad]')
     %subplot(717)
@@ -306,98 +306,7 @@ end
 %%% CONTROLE KINEMATICA %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% EERSTE CONTROLE
-
-% Controle door analytische methode gebaseerd op geometrisch inzicht. 
-% Analoog als in de cursus slide 10 en volgende.
-
-%Controle positie voor phi3 en phi4
-z = zeros(length(phi2));
-alfa_c = zeros(length(phi2));
-beta_c = zeros(length(phi2));
-phi3_c = zeros(length(phi2));
-phi4_c = zeros(length(phi2));
-
-for i = 1:length(phi2)
-    z(i) = sqrt(r1^2+r2^2-2*r1*r2*cos(phi2(i)-3*pi/2));
-    alfa_c(i) = acos((r3^2-r4^2-z(i)^2)/(-2*r4*z(i)));
-    beta_c(i) = acos((r2^2-r1^2-z(i)^2)/(-2*r1*z(i)));
-    phi3_c(i) = -beta_c(i) -pi/2 +acos((r4^2-z(i)^2-r3^2)/(-2*r3*z(i)));
-    phi4_c(i) = pi/2-alfa_c(i) - beta_c(i);
-end
-figure
-plot(t, phi3-phi3_c(:,1))
-xlabel('tijd')
-ylabel('phi3-phi3_c')
-    
-figure
-plot(t, phi4-phi4_c(:,1))
-xlabel('tijd')
-ylabel('phi4-phi4_c')
-
-%VELOCITY
-omega3_c = zeros(length(phi2),1);
-omega4_c = zeros(length(phi2),1);
-for i = 1: length(phi2)
-    Ac = [-r3*sin(phi3(i)), r4*sin(phi4(i));
-            r3*cos(phi3(i)), -r4 *cos(phi4(i))];
-            
-    Bc = [r2*sin(phi2(i))*dphi2(i);
-            -r2*cos(phi2(i))*dphi2(i)];
-    x = Ac\Bc;
-    omega3_c(i) = x(1);
-    omega4_c(i) = x(2);
-end
-figure
-plot(t, dphi3-omega3_c)
-xlabel('tijd')
-ylabel('dphi3-omega3_c')
-
-figure
-plot(t, dphi4-omega4_c)
-xlabel('tijd')
-ylabel('dphi4-omega4_c')
-        
-%ACCELERATION
-alfa3_c = zeros(length(phi2),1);
-alfa4_c = zeros(length(phi2),1);
-omega2 = [zeros(size(phi2)) zeros(size(phi2)) dphi2];
-omega3_c = [zeros(size(phi2)) zeros(size(phi2)) omega3_c];
-omega4_c = [zeros(size(phi2)) zeros(size(phi2)) omega4_c];
-AC_vec = [r2*cos(phi2) r2*sin(phi2) zeros(size(phi2))];
-BE_vec = [r4*cos(phi4) r4*sin(phi4) zeros(size(phi2))];
-CE_vec = [r3*cos(phi3) r3*sin(phi3) zeros(size(phi2))];
-acc_2 =       cross(omega2,cross(omega2,AC_vec    ));
-acc_4 =       cross(omega4_c,cross(omega4_c,BE_vec    ));
-acc_3 =       cross(omega3_c,cross(omega3_c,CE_vec    )); 
-acc_2_x = acc_2(:,1);
-acc_2_y = acc_2(:,2);
-acc_4_x = acc_4(:,1);
-acc_4_y = acc_4(:,2);
-acc_3_x = acc_3(:,1);
-acc_3_y = acc_3(:,2);
-
-for i = 1:length(phi2)
-    Ac = [-r3*sin(phi3(i)), r4*sin(phi4(i));
-            r3*cos(phi3(i)), -r4*cos(phi4(i))];
-    Bc = [r2*sin(phi2(i))*ddphi2(i)+acc_4_x(i)-acc_2_x(i)-acc_3_x(i);
-        -r2*cos(phi2(i))*ddphi2(i)+acc_4_y(i) - acc_2_y(i) - acc_3_y(i)];
-    x = Ac\Bc;
-    alfa3_c(i) = x(1);
-    alfa4_c(i) = x(2);
-end
-figure
-plot(t, ddphi3-alfa3_c)
-xlabel('tijd')
-ylabel('ddphi3-alfa3_c')
-
-figure
-plot(t, ddphi4-alfa4_c)
-xlabel('tijd')
-ylabel('ddphi4-alfa4_c')
-
-
-%Tweede manier van controleren kan door het berekenen van de positie,
+%Eerste manier van controleren kan door het berekenen van de positie,
 %snelheid en versnelling van een punt (hier punt F) via twee verschillende paden. 
 
 
@@ -563,8 +472,96 @@ xlabel('tijd [s]')
 ylabel('relative error on y direction acceleration F')
 hold off
 
-        
-        
+
+
+% TWEEDE CONTROLE
+
+% Controle door analytische methode gebaseerd op geometrisch inzicht. 
+% Analoog als in de cursus Lecture 2 slide 10 en volgende.
+
+%Controle positie voor phi3 en phi4
+z = zeros(length(phi2));
+alfa_c = zeros(length(phi2));
+beta_c = zeros(length(phi2));
+phi3_c = zeros(length(phi2));
+phi4_c = zeros(length(phi2));
+
+for i = 1:length(phi2)
+    z(i) = sqrt(r1^2+r2^2-2*r1*r2*cos(phi2(i)-3*pi/2));
+    alfa_c(i) = acos((r3^2-r4^2-z(i)^2)/(-2*r4*z(i)));
+    beta_c(i) = acos((r2^2-r1^2-z(i)^2)/(-2*r1*z(i)));
+    phi3_c(i) = -beta_c(i) -pi/2 +acos((r4^2-z(i)^2-r3^2)/(-2*r3*z(i)));
+    phi4_c(i) = pi/2-alfa_c(i) - beta_c(i);
+end
+figure
+plot(t, phi3-phi3_c(:,1))
+xlabel('tijd')
+ylabel('phi3-phi3_c')
     
+figure
+plot(t, phi4-phi4_c(:,1))
+xlabel('tijd')
+ylabel('phi4-phi4_c')
+
+%VELOCITY
+omega3_c = zeros(length(phi2),1);
+omega4_c = zeros(length(phi2),1);
+for i = 1: length(phi2)
+    Ac = [-r3*sin(phi3(i)), r4*sin(phi4(i));
+            r3*cos(phi3(i)), -r4 *cos(phi4(i))];
+            
+    Bc = [r2*sin(phi2(i))*dphi2(i);
+            -r2*cos(phi2(i))*dphi2(i)];
+    x = Ac\Bc;
+    omega3_c(i) = x(1);
+    omega4_c(i) = x(2);
+end
+figure
+plot(t, dphi3-omega3_c)
+xlabel('tijd')
+ylabel('dphi3-omega3_c')
+
+figure
+plot(t, dphi4-omega4_c)
+xlabel('tijd')
+ylabel('dphi4-omega4_c')
+        
+%ACCELERATION
+alfa3_c = zeros(length(phi2),1);
+alfa4_c = zeros(length(phi2),1);
+omega2 = [zeros(size(phi2)) zeros(size(phi2)) dphi2];
+omega3_c = [zeros(size(phi2)) zeros(size(phi2)) omega3_c];
+omega4_c = [zeros(size(phi2)) zeros(size(phi2)) omega4_c];
+AC_vec = [r2*cos(phi2) r2*sin(phi2) zeros(size(phi2))];
+BE_vec = [r4*cos(phi4) r4*sin(phi4) zeros(size(phi2))];
+CE_vec = [r3*cos(phi3) r3*sin(phi3) zeros(size(phi2))];
+acc_2 =       cross(omega2,cross(omega2,AC_vec    ));
+acc_4 =       cross(omega4_c,cross(omega4_c,BE_vec    ));
+acc_3 =       cross(omega3_c,cross(omega3_c,CE_vec    )); 
+acc_2_x = acc_2(:,1);
+acc_2_y = acc_2(:,2);
+acc_4_x = acc_4(:,1);
+acc_4_y = acc_4(:,2);
+acc_3_x = acc_3(:,1);
+acc_3_y = acc_3(:,2);
+
+for i = 1:length(phi2)
+    Ac = [-r3*sin(phi3(i)), r4*sin(phi4(i));
+            r3*cos(phi3(i)), -r4*cos(phi4(i))];
+    Bc = [r2*sin(phi2(i))*ddphi2(i)+acc_4_x(i)-acc_2_x(i)-acc_3_x(i);
+        -r2*cos(phi2(i))*ddphi2(i)+acc_4_y(i) - acc_2_y(i) - acc_3_y(i)];
+    x = Ac\Bc;
+    alfa3_c(i) = x(1);
+    alfa4_c(i) = x(2);
+end
+figure
+plot(t, ddphi3-alfa3_c)
+xlabel('tijd')
+ylabel('ddphi3-alfa3_c')
+
+figure
+plot(t, ddphi4-alfa4_c)
+xlabel('tijd')
+ylabel('ddphi4-alfa4_c')
 
 
