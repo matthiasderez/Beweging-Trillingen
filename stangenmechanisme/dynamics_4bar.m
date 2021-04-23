@@ -367,7 +367,7 @@ end
 % *************************
 
 M_controle = zeros(t_size);
-size(M_controle)
+
 dEdt = zeros(t_size);
 for k=1:t_size
 

@@ -308,6 +308,7 @@ end
 
 %Eerste manier van controleren kan door het berekenen van de positie,
 %snelheid en versnelling van een punt (hier punt F) via twee verschillende paden. 
+% Voor extra uitleg, zie verslag Sectie 2.4.1
 
 
 % POSITIE
@@ -321,27 +322,27 @@ figure
 hold on 
 subplot(211)
 plot(AD_vec(:,1)+DF_vec(:,1),AD_vec(:,2)+DF_vec(:,2))
-xlabel('x position F via route 1')
-ylabel('y position F via route 1')
+xlabel('x position F via route 1 [m]')
+ylabel('y position F via route 1 [m]')
 
 subplot(212)
 plot(AC_vec(:,1)+CE_vec(:,1)+EF_vec(:,1),AC_vec(:,2)+CE_vec(:,2)+EF_vec(:,2))
-xlabel('x position F via route 2')
-ylabel('y position F via route 2')
+xlabel('x position F via route 2 [m]')
+ylabel('y position F via route 2 [m]')
 hold off
 
 figure
 hold on
 subplot(211)
 plot(AD_vec(:,1)+DF_vec(:,1)-(AC_vec(:,1)+CE_vec(:,1)+EF_vec(:,1)),(AD_vec(:,2)+DF_vec(:,2)-(AC_vec(:,2)+CE_vec(:,2)+EF_vec(:,2))))
-xlabel('Absolute error position F')
+xlabel('Absolute error position F [m]')
 subplot(212)
 plot((AD_vec(:,1)+DF_vec(:,1)-(AC_vec(:,1)+CE_vec(:,1)+EF_vec(:,1)))/(AD_vec(:,1)+DF_vec(:,1)),(AD_vec(:,2)+DF_vec(:,2)-(AC_vec(:,2)+CE_vec(:,2)+EF_vec(:,2)))/(AD_vec(:,2)+DF_vec(:,2)))
-xlabel('Relative error position F')
+xlabel('Relative error position F [/]')
 
 
 
-% SNELHEID
+%%%SNELHEID%%%
 
 omega2 = [zeros(size(phi2)) zeros(size(phi2)) dphi2];
 omega3 = [zeros(size(phi2)) zeros(size(phi2)) dphi3];
@@ -363,22 +364,22 @@ hold on
 subplot(211)
 plot(t, vel_F1_x)
 xlabel('tijd [s]')
-ylabel('x direction velocity F, path 1')
+ylabel('x direction velocity F, path 1 [m/s]')
 subplot(212)
 plot(t, vel_F2_x)
 xlabel('tijd [s]')
-ylabel('x direction velocity F, path 2')
+ylabel('x direction velocity F, path 2 [m/s]')
 hold off
 figure
 hold on
 subplot(211)
 plot(t, vel_F1_x - vel_F2_x)
 xlabel('tijd [s]')
-ylabel('absolute error on x direction velocity F')
+ylabel('absolute error on x direction velocity F [m/s]')
 subplot(212)
 plot(t, (vel_F1_x - vel_F2_x)./vel_F1_x)
 xlabel('tijd [s]')
-ylabel('relative error on x direction velocity F')
+ylabel('relative error on x direction velocity F [/]')
 hold off
 
 figure
@@ -386,25 +387,25 @@ hold on
 subplot(211)
 plot(t, vel_F1_y)
 xlabel('tijd [s]')
-ylabel('y direction velocity F, path 1')
+ylabel('y direction velocity F, path 1 [m/s]')
 subplot(212)
 plot(t, vel_F2_y)
 xlabel('tijd [s]')
-ylabel('y direction velocity F, path 2')
+ylabel('y direction velocity F, path 2 [m/s]')
 hold off
 figure
 hold on
 subplot(211)
 plot(t, vel_F1_y - vel_F2_y)
 xlabel('tijd [s]')
-ylabel('absolute error on y direction velocity F')
+ylabel('absolute error on y direction velocity F [m/s]')
 subplot(212)
 plot(t, (vel_F1_y - vel_F2_y)./vel_F1_y)
 xlabel('tijd [s]')
-ylabel('relative error on y direction velocity F')
+ylabel('relative error on y direction velocity F [/]')
 hold off
 
-%VERSNELLING
+%%%VERSNELLING%%%
 
 alpha2 = [zeros(size(phi2)) zeros(size(phi2)) ddphi2];
 alpha3 = [zeros(size(phi2)) zeros(size(phi2)) ddphi3];
@@ -430,22 +431,22 @@ hold on
 subplot(211)
 plot(t, acc_F1_x)
 xlabel('tijd [s]')
-ylabel('x direction acceleration F, path 1')
+ylabel('x direction acceleration F, path 1 [m^2/s]')
 subplot(212)
 plot(t, acc_F2_x)
 xlabel('tijd [s]')
-ylabel('x direction acceleration F, path 2')
+ylabel('x direction acceleration F, path 2 [m^2/s]')
 hold off
 figure
 hold on
 subplot(211)
 plot(t, acc_F1_x - acc_F2_x)
 xlabel('tijd [s]')
-ylabel('absolute error on x direction acceleration F')
+ylabel('absolute error on x direction acceleration F [m^2/s]')
 subplot(212)
 plot(t, (acc_F1_x - acc_F2_x)./acc_F1_x)
 xlabel('tijd [s]')
-ylabel('relative error on x direction acceleration F')
+ylabel('relative error on x direction acceleration F [/]')
 hold off
 
 
@@ -454,22 +455,22 @@ hold on
 subplot(211)
 plot(t, acc_F1_y)
 xlabel('tijd [s]')
-ylabel('y direction acceleration F, path 1')
+ylabel('y direction acceleration F, path 1 [m^2/s]')
 subplot(212)
 plot(t, acc_F2_y)
 xlabel('tijd [s]')
-ylabel('y direction acceleration F, path 2')
+ylabel('y direction acceleration F, path 2 [m^2/s]')
 hold off
 figure
 hold on
 subplot(211)
 plot(t, acc_F1_y - acc_F2_y)
 xlabel('tijd [s]')
-ylabel('absolute error on y direction acceleration F')
+ylabel('absolute error on y direction acceleration F [m^2/s]')
 subplot(212)
 plot(t, (acc_F1_y - acc_F2_y)./acc_F1_y)
 xlabel('tijd [s]')
-ylabel('relative error on y direction acceleration F')
+ylabel('relative error on y direction acceleration F [/]')
 hold off
 
 
@@ -495,15 +496,15 @@ for i = 1:length(phi2)
 end
 figure
 plot(t, phi3-phi3_c(:,1))
-xlabel('tijd')
-ylabel('phi3-phi3_c')
+xlabel('tijd [s]')
+ylabel('phi3-phi3_c [rad]')
     
 figure
 plot(t, phi4-phi4_c(:,1))
-xlabel('tijd')
-ylabel('phi4-phi4_c')
+xlabel('tijd [s]')
+ylabel('phi4-phi4_c [rad]')
 
-%VELOCITY
+%%%VELOCITY%%%
 omega3_c = zeros(length(phi2),1);
 omega4_c = zeros(length(phi2),1);
 for i = 1: length(phi2)
@@ -518,15 +519,15 @@ for i = 1: length(phi2)
 end
 figure
 plot(t, dphi3-omega3_c)
-xlabel('tijd')
-ylabel('dphi3-omega3_c')
+xlabel('tijd [s]')
+ylabel('dphi3-omega3_c [rad/s]')
 
 figure
 plot(t, dphi4-omega4_c)
-xlabel('tijd')
-ylabel('dphi4-omega4_c')
+xlabel('tijd [s]')
+ylabel('dphi4-omega4_c [rad/s]')
         
-%ACCELERATION
+%%%ACCELERATION%%%
 alfa3_c = zeros(length(phi2),1);
 alfa4_c = zeros(length(phi2),1);
 omega2 = [zeros(size(phi2)) zeros(size(phi2)) dphi2];
@@ -556,12 +557,12 @@ for i = 1:length(phi2)
 end
 figure
 plot(t, (ddphi3-alfa3_c)./ddphi3)
-xlabel('tijd')
-ylabel('ddphi3-alfa3_c')
+xlabel('tijd [s]')
+ylabel('ddphi3-alfa3_c [rad/s^2]')
 
 figure
 plot(t, (ddphi4-alfa4_c)./ddphi4)
-xlabel('tijd')
-ylabel('ddphi4-alfa4_c')
+xlabel('tijd [s]')
+ylabel('ddphi4-alfa4_c [rad/s^2]')
 
 
