@@ -555,12 +555,12 @@ for i = 1:length(phi2)
     alfa4_c(i) = x(2);
 end
 figure
-plot(t, ddphi3-alfa3_c)
+plot(t, (ddphi3-alfa3_c)./ddphi3)
 xlabel('tijd')
 ylabel('ddphi3-alfa3_c')
 
 figure
-plot(t, ddphi4-alfa4_c)
+plot(t, (ddphi4-alfa4_c)./ddphi4)
 xlabel('tijd')
 ylabel('ddphi4-alfa4_c')
 
