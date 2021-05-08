@@ -38,14 +38,13 @@ ylabel('theta2')
 %% Numeriek oplossen met lsim
 figure
 lsim(sys, theta, tau)
-gamma_numeriek = lsim(sys, theta, tau);
-gamma_numeriek = transpose(gamma_numeriek);
+gamma = lsim(sys, theta, tau);
 figure
-plot(tau, (gamma_numeriek-theta));
+plot(tau, transpose(gamma)-theta);
 xlabel('tau(-)');
 ylabel('gamma_{numeriek}-theta')
 figure
-plot(tau, gamma_numeriek)
+plot(tau, gamma)
 xlabel('tau')
 ylabel('gamma_{numeriek}')
 
@@ -56,8 +55,8 @@ ylabel('gamma_{numeriek}')
 % KLOPT NOG NIET
 
 [value,index]=min(abs(tau-1)); % index vinden waar tau zo dicht mogelijk ligt bij 1
-gamma1 = gamma_numeriek(index);
-gammadot1 = (gamma_numeriek(index+1)-gamma_numeriek(index-1))./(2*step); %afgeleide numeriek benaderen
+gamma1 = gamma(index);
+gammadot1 = (gamma(index+1)-gamma(index-1))./(2*step); %afgeleide numeriek benaderen
 %formules slide13
 A = sqrt((((gamma1-1)*2*pi*lambda_d)^2+(gammadot1+zeta*2*pi*lambda*(gamma1-1))^2)/(2*pi*lambda_d)^2);
 phi = atan(-(gammadot1+zeta*2*pi*lambda*(gamma1-1))/((gamma1-1)*2*pi*lambda_d));
@@ -80,10 +79,8 @@ plot(tau, 1-compl_omh)
 hold off
 
 figure
-plot(tau(4001:8001), (gamma_analytisch(4001:8001) - gamma_numeriek(4001:8001)))
-xlim([1 2]);
-xlabel('tau [-]')
-ylabel('gamma_{analytisch} - gamma_{numeriek}')
+plot(tau(4001:8001], gamma_analytisch[4001:8001] - gamma_numer
+%opm: komt perfect overeen met gamma numeriek als je inzoomt!!
 
 %% Benaderende oplossing
 Q = (2*pi)^2;
@@ -153,4 +150,3 @@ epsilon = abs((A-Ab)/A);
 % hold off
 % 
 % 
-save('single_rise.mat')
