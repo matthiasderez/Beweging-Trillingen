@@ -89,12 +89,12 @@ ylabel('gamma_{analytisch} - gamma_{numeriek}')
 Q = (2*pi)^2;
 N = 3;
 Ab = Q/(2*pi*lambda)^N * sqrt(1/(1-zeta^2)); %formule slide 27
-
+epsilon = abs((A-Ab)/A);
 % KLOPT NOG NIET MET GAMMA, NOG EENS KIJKEN HOE TE PLOTTEN
 b2 = -zeta*2*pi/lambda;
 b1 = -1/lambda^2*(1-4*zeta^2);
-%b0 = 2*zeta/(pi*lambda)*(1-2*zeta^2)+1;  % --> Matthias
-b0 = zeta/(pi*lambda^3)*(2-4*zeta^2 +lambda); %--> Andreas
+b0 = 2*zeta/(pi*lambda)*(1-2*zeta^2)+1;  % --> Matthias
+%b0 = zeta/(pi*lambda^3)*(2-4*zeta^2 +lambda); %--> Andreas
 
 gamma_b = Q*(tau-1).^3/6+b2*(tau-1).^2+b1*(tau-1)+b0;
 figure
@@ -102,7 +102,7 @@ plot(tau, gamma_b)
 xlabel('tau')
 ylabel('gamma_b')
 
-epsilon = abs((A-Ab)/A);
+
 
 
 
