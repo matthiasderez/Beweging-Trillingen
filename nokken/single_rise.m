@@ -1,38 +1,58 @@
+clc
+clear all
+close all
 
+%% Data inladen
 out = load('values.mat');
 
 %selecteren van de waardes bij de fall tss hoek 200° en 240°
-heffing = out.S(20000:28000);
-t1 = 0.05555; %zie andreas
+heffing = out.S(20000:28000)*0.001;
+tijd = out.theta(20000:28000)/out.w;
+m = out.mass;
+
+
+%% Variabelen aanmaken
+t1 = 40/720; %zie andreas
+T = (2*pi)/out.w;
+tau = (tijd - tijd(1))/t1; % -tijd(1) om ervoor te zorgen dat ons segment start op tau = 0
+step = tau(2)-tau(1);
 zeta = 0.091; %gegeven
-lambda = 0.75/zeta; % 10% accuracy 
+lambda = 0.75/zeta; % 10% accuraat
 
+lambda_d = lambda*sqrt(1-zeta^2);
+theta2 = (0.04-heffing)./0.04; %van fall een rise maken
 
+%% kf berekenen
+kf = m*(lambda*2*pi/t1)^2;
+%% Transferfunctie aanmaken
 teller = (2*pi*lambda)^2;
 noemer = [1, 2*zeta*(2*pi*lambda), (2*pi*lambda)^2];
 sys = tf(teller, noemer);
 
-tau_max = 160/720/t1; %160 graden want we bekijken 200 tot 360 graden
-step = 1/4000; %zodat we 4000 waarden hebben
-tau = [0:step:2]; 
-
-
-
-theta2 = (40-heffing)./40; %van fall een rise maken
-
+%% Plotten figuren 
 figure
 plot(tau, theta2)
+xlabel('tau')
+ylabel('theta2')
 
+
+%% Numeriek oplossen met lsim
+figure
 lsim(sys, theta2, tau)
 gamma2 = lsim(sys, theta2, tau);
 figure
-
-
 plot(tau, transpose(gamma2)-theta2);
 xlabel('tau(-)');
 ylabel('gamma2-theta2')
 
-index = find(tau==1);
+
+%% Analystisch oplossen 
+
+% KLOPT NOG NIET
+
+[value,index]=min(abs(tau-1));
+
+
 gamma3 = gamma2(index);
 gammadot2 = (gamma2(index+1)-gamma2(index-1))./(2*step); %afgeleide numeriek benaderen
 %formules slide13
@@ -48,23 +68,32 @@ end
 gamma_analytisch = 1+ oscillatie;
 figure
 hold on
-plot(tau, gamma_analytish)
+plot(tau, gamma_analytisch)
 xlabel('tau')
 ylabel('gamma_{analytisch}')
-plot(tau, compl_omh)
-plot(tau, -compl_omh)
+plot(tau, 1+compl_omh)
+plot(tau, 1-compl_omh)
 hold off
 
 
-%%%BENADEREND%%%
+%% Benaderende oplossing
 Q = (2*pi)^2;
 N = 3;
-
 Ab = Q/(2*pi*lambda)^N * sqrt(1/(1-zeta^2)); %formule slide 27
 
+% KLOPT NOG NIET MET GAMMA, NOG EENS KIJKEN HOE TE PLOTTEN
+b2 = -zeta*2*pi/lambda;
+b1 = -1/lambda^2*(1-4*zeta^2);
+%b0 = 2*zeta/(pi*lambda)*(1-2*zeta^2)+1;  % --> Matthias
+b0 = zeta/(pi*lambda^3)*(2-4*zeta^2 +lambda); %--> Andreas
 
+gamma_b = Q*(tau-1).^3/6+b2*(tau-1).^2+b1*(tau-1)+b0;
+figure
+plot(tau, gamma_b)
+xlabel('tau')
+ylabel('gamma_b')
 
-
+epsilon = abs((A-Ab)/A);
 
 
 
