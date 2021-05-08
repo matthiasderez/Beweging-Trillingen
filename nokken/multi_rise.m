@@ -10,6 +10,7 @@ m = out.mass;
 heffing = out.S.*0.001;
 multirise_heffing = [heffing,heffing,heffing,heffing,heffing,heffing,heffing,heffing];
 tijd = out.theta/W;
+pas  = tijd(2) - tijd(1);
 multirise_tijd = [tijd,tijd+0.5,tijd+2*(0.5),tijd+3*(0.5),tijd+4*(0.5),tijd+5*(0.5),tijd+6*(0.5),tijd+7*(0.5)];
 % verschil = zeros(length(multirise_tijd),1);
 % verschiltijd = zeros(length(multirise_tijd),1);
@@ -57,11 +58,40 @@ plot(tau, gamma- theta)
 xlabel('tau')
 ylabel('gamma-theta')
 
-%% Analytisch 
+%% Analytische oplossing
+
+
+% N = 1000;
+% x = theta;
+% 
+% X=fft(x,N);
+% a=2*real(X)/N;
+% b=-2*imag(X)/N;
+% a0 = a(1)/2;
+% ak = a(2:N)';
+% bk = b(2:N)';
+% theta_analytisch = zeros(288000,1);
+% for i = 1:288000
+%     som = 0;
+%     for j = 1:N-1
+%         som = som + ak(j)*cos(2*pi*j*tau(i)) + bk(j)*sin(2*pi*j*tau(i));
+%     end
+%     theta_analytisch(i) = a0 + som;
+% end
+% figure 
+% hold on
+% plot(tau, theta_analytisch)
+% xlabel('tau')
+% %ylabel('theta_{analytisch}')
+% % plot(tau, theta)
+% % legend('theta_{analytisch}','theta_{numeriek}')
+% hold off
+
+
 K = 100;
 % Fourierreeks opstellen,
-A = zeros(288000,2*K+1); %288000= length( theta), 201 = 2*K+1 met k= 100 slides 2.27 en 9.39
-for i= 1:288000
+A = zeros(36000,2*K+1); %288000= length( theta), 201 = 2*K+1 met k= 100 slides 2.27 en 9.39
+for i= 1:36000
     for j = 1:2*K+1
         if mod( j , 2 ) == 0
             A(i,j) = cos(2*pi*j*tau(i));
@@ -75,13 +105,13 @@ for i= 1:288000
         end
     end
 end
-X = A\transpose(theta);
+X = A\transpose(theta(1:36000));
 
 a_0 = X(1);
-coef_a = zeros(201,1);
-coef_b = zeros(201,1);
-coef_c = zeros(201,1);
-coef_d = zeros(201,1);
+coef_a = zeros(K,1);
+coef_b = zeros(K,1);
+coef_c = zeros(K,1);
+coef_d = zeros(K,1);
 
 for i = 2:2*K+1
     if mod(i,2) ==0
@@ -96,16 +126,16 @@ for i = 1:K
     coef_d(i) = (2*zeta*i*coef_a(i)/lambda_tilde+(1-(i/lambda_tilde)^2)*coef_b(i))/((2*zeta*i/lambda_tilde)^2 + (1-(i/lambda_tilde)^2)^2);   
 end
 
-gamma_analytisch = zeros(288000,1);
-for i = 1:288000
+gamma_analytisch = zeros(36000,1);
+for i = 1:36000
     som = 0;
     for j = 1:K
         som = som + coef_c(j)*cos(2*pi*j*tau(i)) + coef_d(j)*sin(2*pi*j*tau(i));
     end
     gamma_analytisch(i) = a_0/2 + som;
 end
-theta_analytisch = zeros(288000,1);
-for i = 1:288000
+theta_analytisch = zeros(36000,1);
+for i = 1:36000
     som = 0;
     for j = 1:K
         som = som + coef_a(j)*cos(2*pi*j*tau(i)) + coef_b(j)*sin(2*pi*j*tau(i));
@@ -114,19 +144,20 @@ for i = 1:288000
 end
 figure 
 hold on
-plot(tau, theta_analytisch)
+plot(tau(1:36000), theta_analytisch)
 xlabel('tau')
-ylabel('theta_{analytisch}')
-plot(tau, theta)
+%ylabel('theta_{analytisch}')
+plot(tau(1:36000), theta(1:36000))
+legend('theta_{analytisch}','theta_{numeriek}')
 hold off
 
 
 figure
-plot(tau, gamma_analytisch)
+plot(tau(1:36000), gamma_analytisch)
 xlabel('tau')
 ylabel('gamma_{analytisch}')
 figure
-plot(tau, gamma - transpose(gamma_analytisch))
+plot(tau(1:36000), gamma(1:36000) - transpose(gamma_analytisch))
 xlabel('tau')
 ylabel('gamma-gamma_{analytisch}')
 

@@ -31,8 +31,8 @@ sys = tf(teller, noemer);
 %% Plotten figuren 
 figure
 plot(tau, theta)
-xlabel('tau')
-ylabel('theta2')
+xlabel('\tau')
+ylabel('\theta2')
 
 
 %% Numeriek oplossen met lsim
@@ -42,12 +42,18 @@ gamma_numeriek = lsim(sys, theta, tau);
 gamma_numeriek = transpose(gamma_numeriek);
 figure
 plot(tau, (gamma_numeriek-theta));
-xlabel('tau(-)');
-ylabel('gamma_{numeriek}-theta')
+xlabel('\tau [-]');
+ylabel('\gamma_{numeriek}-\theta [-]')
 figure
 plot(tau, gamma_numeriek)
-xlabel('tau')
-ylabel('gamma_{numeriek}')
+xlabel('\tau [-]')
+ylabel('\gamma_{numeriek} [-]')
+figure
+plot(tau, gamma_numeriek)
+xlim([1 2])
+xlabel('\tau [-]')
+ylabel('\gamma_{numeriek} [-]')
+
 
 
 %% Analystisch oplossen 
@@ -73,8 +79,8 @@ figure
 hold on
 plot(tau, gamma_analytisch)
 xlim([1 2])
-xlabel('tau')
-ylabel('gamma_{analytisch}')
+xlabel('\tau [-]')
+ylabel('\gamma_{analytisch} [-]')
 plot(tau, 1+compl_omh)
 plot(tau, 1-compl_omh)
 hold off
@@ -82,25 +88,36 @@ hold off
 figure
 plot(tau(4001:8001), (gamma_analytisch(4001:8001) - gamma_numeriek(4001:8001)))
 xlim([1 2]);
-xlabel('tau [-]')
-ylabel('gamma_{analytisch} - gamma_{numeriek}')
+xlabel('\tau [-]')
+ylabel('\gamma_{analytisch} - gamma_{numeriek} [-]')
 
 %% Benaderende oplossing
 Q = (2*pi)^2;
 N = 3;
 Ab = Q/(2*pi*lambda)^N * sqrt(1/(1-zeta^2)); %formule slide 27
 epsilon = abs((A-Ab)/A);
-% KLOPT NOG NIET MET GAMMA, NOG EENS KIJKEN HOE TE PLOTTEN
+
 b2 = -zeta*2*pi/lambda;
 b1 = -1/lambda^2*(1-4*zeta^2);
-b0 = 2*zeta/(pi*lambda)*(1-2*zeta^2)+1;  % --> Matthias
-%b0 = zeta/(pi*lambda^3)*(2-4*zeta^2 +lambda); %--> Andreas
+b0 = 2*zeta/(pi*lambda^3)*(1-2*zeta^2)+1;  
 
-gamma_b = Q*(tau-1).^3/6+b2*(tau-1).^2+b1*(tau-1)+b0;
+
+theta_0 = b0-1; %zie notities matthias + slide 9.27 theta_0 = gamma(1) - 1
+theta_dot0 = b1; %zie notities matthias + slide 9.27 theta_dot0 = gammadot(1) 
+[A_appr,B_appr,C_appr,D_appr] = tf2ss(teller,noemer);
+X0 = [1/C_appr(2)*theta_dot0; 1/C_appr(2)*theta_0];
+gamma_b = transpose(lsim(A_appr,B_appr,C_appr,D_appr, theta, tau, X0));
 figure
 plot(tau, gamma_b)
-xlabel('tau')
-ylabel('gamma_b')
+xlim([1 2]);
+xlabel('\tau [-]')
+ylabel('\gamma_b [-]')
+
+figure
+plot(tau, gamma_b - gamma_numeriek)
+xlim([1 2]);
+xlabel('\tau [-]')
+ylabel('\gamma_b-\gamma_{numeriek} [-]')
 
 
 
