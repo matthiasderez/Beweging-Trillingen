@@ -4,6 +4,7 @@ close all
 
 %% Data inladen
 out = load('values.mat');
+out_zonder= load('values met veer Fv0_0.mat');
 T = 0.5;
 W = out.w;
 m = out.mass;
@@ -12,6 +13,7 @@ multirise_heffing = [heffing,heffing,heffing,heffing,heffing,heffing,heffing,hef
 tijd = out.theta/W;
 pas  = tijd(2) - tijd(1);
 multirise_tijd = [tijd,tijd+0.5,tijd+2*(0.5),tijd+3*(0.5),tijd+4*(0.5),tijd+5*(0.5),tijd+6*(0.5),tijd+7*(0.5)];
+
 % verschil = zeros(length(multirise_tijd),1);
 % verschiltijd = zeros(length(multirise_tijd),1);
 % xwaarde = zeros(length(multirise_tijd),1);
@@ -184,4 +186,24 @@ figure
 plot(tau4, gamma_mr-(1-gamma_sr))
 ylabel('gamma_{mr}-gamma_{sr}')
 xlabel('tau')
+
+%% nieuwe veerkracht met vervormbare volger
+F = zeros(length(out_zonder.theta),1);
+gamma_veer= gamma(1:36000);
+theta_veer= theta(1:36000);
+for i= 1:length(out_zonder.theta)
+    F(i) = (0*out_zonder.S(i) - (gamma_veer(i) - theta_veer(i))*kf*0.001*40)/cos(out_zonder.pressure_angle(i));
+    Fm(i)= (200 + 275*out_zonder.S(i) - (gamma_veer(i) - theta_veer(i))*kf*0.001*40)/cos(out_zonder.pressure_angle(i));
+end
+
+
+figure
+hold on
+plot(out_zonder.thetadegree,F)
+plot(out_zonder.thetadegree,Fm)
+hold off
+%plot(out_zonder.thetadegree, out_zonder.normalforce_tot)
+legend('F_{zonder veer}', 'F_{met veer}');
+xlabel('theta')
+ylabel('F van mij')
 
