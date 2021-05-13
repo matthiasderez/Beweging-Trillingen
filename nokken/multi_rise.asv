@@ -52,13 +52,13 @@ sys = tf(teller, noemer);
 gamma_numeriek = lsim(sys,theta,tau).';
 figure
 plot(tau, gamma_numeriek)
-ylabel('\gamma_{numeriek} [-]')
-xlabel('\tau [-]')
+ylabel('\gamma_{numeriek}')
+xlabel('\tau')
 
 figure
 plot(tau, gamma_numeriek- theta)
-xlabel('\tau [-]')
-ylabel('\gamma_{numeriek}-\theta [-]')
+xlabel('\tau')
+ylabel('\gamma_{numeriek}-\theta')
 
 %% Analytische oplossing
 
@@ -147,7 +147,7 @@ end
 figure 
 hold on
 plot(tau(1:36000), theta_analytisch)
-xlabel('\tau [-]')
+xlabel('\tau')
 %ylabel('theta_{analytisch}')
 plot(tau(1:36000), theta(1:36000))
 legend('\theta_{analytisch}','\theta_{numeriek}')
@@ -156,12 +156,12 @@ hold off
 
 figure
 plot(tau(1:36000), gamma_analytisch)
-xlabel('\tau [-]')
-ylabel('\gamma_{analytisch} [-]')
+xlabel('\tau')
+ylabel('\gamma_{analytisch}')
 figure
 plot(tau(1:36000), gamma_numeriek(1:36000) - transpose(gamma_analytisch))
-xlabel('\tau [-]')
-ylabel('\gamma_{numeriek}-\gamma_{analytisch} [-]')
+xlabel('\tau')
+ylabel('\gamma_{numeriek}-\gamma_{analytisch}')
 
 
 %% Vergelijken multi- en singlerise
@@ -177,20 +177,20 @@ figure
 hold on
 plot(tau4, gamma_mr, 'b')
 plot(tau4, 1-gamma_sr, 'r')
-ylabel('\gamma [-]')
-xlabel('\tau [-]')
+ylabel('\gamma')
+xlabel('\tau')
 legend('\gamma_{mr}', '\gamma_{sr}');
 hold off
 
 figure 
 plot(tau4, (gamma_mr-(1-gamma_sr)))
-ylabel('\gamma_{mr}-\gamma_{sr} [-]')
-xlabel('\tau [-]')
+ylabel('\gamma_{mr}-\gamma_{sr}')
+xlabel('\tau')
 
 %meer ingezoomde figuren om enkel vrije respons te vergelijken
 % single rise -> 8000 waarden, tau = 1 voor index 4001
 % multi rise periode 4 -> waarden 132001 tot 136000
-gamma_sr_vrijerespons = sr.gamma_numeriek(4001:8000);
+
 gamma_mr_vrijerespons = gamma_numeriek(132001:136000);
 theta_mr_vrijerespons = theta(132001:136000);
 tau4_vrijerespons = tau(132001:136000);
@@ -198,15 +198,15 @@ tau4_vrijerespons = tau(132001:136000);
 figure
 hold on
 plot(tau4_vrijerespons, gamma_mr_vrijerespons, 'b')
-ylabel('\gamma_{mr-vrije respons} [-]')
-xlabel('\tau [-]')
-
+ylabel('\gamma')
+xlabel('\tau')
+legend('\gamma_{mr}');
 hold off
 
 figure 
-plot(tau4_vrijerespons, (gamma_mr_vrijerespons-(1-gamma_sr_vrijerespons)))
-ylabel('\gamma_{mr-vrije respons}-\gamma_{sr-vrije respons} [-]')
-xlabel('\tau [-]')
+plot(tau4, (gamma_mr-(1-gamma_sr)))
+ylabel('\gamma_{mr}-\gamma_{sr}')
+xlabel('\tau')
 %% nieuwe veerkracht met vervormbare volger
 F = zeros(length(out_zonder.theta),1);
 gamma_veer= gamma_numeriek(1:36000);
@@ -224,6 +224,6 @@ plot(out_zonder.thetadegree,Fm)
 hold off
 %plot(out_zonder.thetadegree, out_zonder.normalforce_tot)
 legend('F_{zonder veer}', 'F_{met veer}');
-xlabel('theta [-]')
+xlabel('theta')
 ylabel('F van mij')
 

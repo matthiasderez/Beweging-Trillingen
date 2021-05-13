@@ -32,7 +32,7 @@ sys = tf(teller, noemer);
 figure
 plot(tau, theta)
 xlabel('\tau')
-ylabel('\theta2')
+ylabel('\theta')
 
 
 %% Numeriek oplossen met lsim
@@ -59,7 +59,7 @@ ylabel('\gamma_{numeriek} [-]')
 %% Analystisch oplossen 
 % voor vrije respons dus tau > 1
 % zie slides 12 
-% KLOPT NOG NIET
+
 
 [value,index]=min(abs(tau-1)); % index vinden waar tau zo dicht mogelijk ligt bij 1
 gamma1 = gamma_numeriek(index);
@@ -86,12 +86,14 @@ plot(tau, 1-compl_omh)
 hold off
 
 figure
-plot(tau(4001:8001), (gamma_analytisch(4001:8001) - gamma_numeriek(4001:8001)))
+plot(tau(4001:8001), (gamma_analytisch(4001:8001) - gamma_numeriek(4001:8001))./gamma_numeriek(4001:8001))
 xlim([1 2]);
 xlabel('\tau [-]')
-ylabel('\gamma_{analytisch} - gamma_{numeriek} [-]')
+ylabel('(\gamma_{analytisch} - \gamma_{numeriek})/ \gamma_{numeriek})[-]')
 
 %% Benaderende oplossing
+%Voorwaarde checken
+controle = exp(-zeta*2*pi*lambda);
 Q = (2*pi)^2;
 N = 3;
 Ab = Q/(2*pi*lambda)^N * sqrt(1/(1-zeta^2)); %formule slide 27
@@ -111,13 +113,13 @@ figure
 plot(tau, gamma_b)
 xlim([1 2]);
 xlabel('\tau [-]')
-ylabel('\gamma_b [-]')
+ylabel('\gamma_{benaderend} [-]')
 
 figure
-plot(tau, gamma_b - gamma_numeriek)
+plot(tau, (gamma_b - gamma_numeriek)./gamma_numeriek)
 xlim([1 2]);
 xlabel('\tau [-]')
-ylabel('\gamma_b-\gamma_{numeriek} [-]')
+ylabel('(\gamma_{benaderend}-\gamma_{numeriek})/\gamma_{numeriek} [-]')
 
 
 
